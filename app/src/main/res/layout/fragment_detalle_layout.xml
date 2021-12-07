@@ -21,12 +21,13 @@
         tools:ignore="SpeakableTextPresentCheck" />
 
 
+
     <TextView
         android:id="@+id/titulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/spnGeneros"
         android:layout_alignParentLeft="true"
+        android:layout_below="@+id/spnGeneros"
         android:layout_alignParentRight="true"
         android:gravity="center"
         android:text="Título"

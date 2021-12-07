@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
@@ -8,14 +7,13 @@
         android:icon="@android:drawable/ic_menu_set_as"
         android:orderInCategory="100"
         app:showAsAction="ifRoom|withText"
-        android:title="Ultimo leido" />
-
+        android:title="Ultimo leido"></item>
     <item
         android:id="@+id/menu_buscar"
-        android:icon="@android:drawable/ic_menu_search"
-        android:orderInCategory="90"
         app:actionViewClass="android.widget.SearchView"
+        android:orderInCategory="90"
+        android:icon="@android:drawable/ic_menu_search"
         app:showAsAction="ifRoom|collapseActionView"
-        android:title="Buscar" />
+        android:title="Buscar"></item>
 
 </menu>

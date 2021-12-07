@@ -3,7 +3,6 @@ package com.example.audiolibros;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,23 +17,49 @@ import androidx.fragment.app.Fragment;
 
 import java.io.IOException;
 
-public class DetalleFragment extends Fragment implements MediaPlayer.OnPreparedListener, MediaController.MediaPlayerControl, View.OnTouchListener {
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link DetalleFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class DetalleFragment extends Fragment
+    implements MediaPlayer.OnPreparedListener,
+        MediaController.MediaPlayerControl,
+        View.OnTouchListener
+
+{
+
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    public static String mParam1;
-    public static String mParam2;
+
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
+
     public static String ARG_INDEX_LIBRO = "idLibro";
     private TextView lblTitulo;
     private TextView lblAutor;
-    private ImageView imgPortada;
+    private ImageView imvPortada;
+
     MediaPlayer mediaPlayer;
     MediaController mediaController;
 
-    public DetalleFragment(){
-
+    public DetalleFragment() {
+        // Required empty public constructor
     }
 
-    public static DetalleFragment newIntance(String param1, String param2){
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment DetalleFragment.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static DetalleFragment newInstance(String param1, String param2) {
         DetalleFragment fragment = new DetalleFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
@@ -52,72 +77,90 @@ public class DetalleFragment extends Fragment implements MediaPlayer.OnPreparedL
         }
     }
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
-        View layout = inflater.inflate(R.layout.fragment_detalle_layout, container, false);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View layout =
+                inflater.inflate(R.layout.fragment_detalle_layout,
+                        container, false);
+
         layout.setOnTouchListener(this);
-        Spinner spinner = layout.findViewById(R.id.spnGeneros);
-        String[] generos = getResources().getStringArray(R.array.generos);
-        ArrayAdapter<String> adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, generos);
+
+        Spinner spinner =
+                layout.findViewById(R.id.spnGeneros);
+
+        String[] generos
+                =  getResources().getStringArray(R.array.generos);
+
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter(getActivity(),
+                        android.R.layout.simple_list_item_1,
+                        android.R.id.text1, generos
+                        );
+
         spinner.setAdapter(adapter);
-        Bundle args = getArguments();
-        if(args != null){
-            int idLibro = args.getInt(DetalleFragment.ARG_INDEX_LIBRO);
-            setInfoLibro(idLibro, layout);
-        }else{
-            setInfoLibro(0,layout);
-        }
+
+          Bundle args = getArguments();
+
+          if(args != null){
+               int idLibro =
+                       args.getInt(DetalleFragment.ARG_INDEX_LIBRO);
+               setInfoLibro(idLibro,layout );
+          }else{
+              setInfoLibro(0, layout);
+          }
+
+
         return layout;
     }
 
-    public void setInfoLibro(int idLibro, View layout){
+    private void setInfoLibro(int idLibro, View layout) {
         Libro libro = Libro.ejemplosLibros().elementAt(idLibro);
+
         lblTitulo = layout.findViewById(R.id.titulo);
         lblAutor = layout.findViewById(R.id.autor);
-        imgPortada = layout.findViewById(R.id.portada);
+        imvPortada = layout.findViewById(R.id.portada);
+
         lblTitulo.setText(libro.getTitulo());
         lblAutor.setText(libro.getAutor());
-        imgPortada.setImageResource(libro.getRecursoImagen());
-        if(mediaPlayer!= null){
+        imvPortada.setImageResource(libro.getRecursoImagen());
+
+        if( mediaPlayer!= null){
             mediaPlayer.release();
         }
-        mediaPlayer = new MediaPlayer();
-        mediaController = new MediaController(getActivity());
-        mediaPlayer.setOnPreparedListener(this);
-        try{
-            mediaPlayer.setDataSource(getActivity(), Uri.parse(libro.getUrl()));
-            mediaPlayer.prepareAsync();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+
+            mediaPlayer = new MediaPlayer();
+            mediaController = new MediaController(getActivity());
+            mediaPlayer.setOnPreparedListener(this);
+            try {
+                mediaPlayer.setDataSource(getActivity(),
+                        Uri.parse(libro.getUrl()));
+                mediaPlayer.prepareAsync();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
     }
 
-    public void setInfoLibro(int pos){
-        this.setInfoLibro(pos,getView());
+
+
+    public void setInfoLibro(int pos) {
+
+        this.setInfoLibro(pos,getView()    );
     }
 
     @Override
-    public void onPrepared(MediaPlayer mp) {
-        Log.d("AudioLibros", "Entramos en onPrepared de MediaPlayer");
-        mediaPlayer.start();
+    public void onPrepared(MediaPlayer mediaPlayer) {
+
         mediaController.setMediaPlayer(this);
-        mediaController.setAnchorView(getView().findViewById(R.id.fragment_detalle_layout_root));
-        mediaController.setPadding(0,0,0,110);
+        mediaController.setAnchorView(
+                getView().findViewById(R.id.fragment_detalle_layout_root));
         mediaController.setEnabled(true);
         mediaController.show();
+        mediaPlayer.start();
 
-    }
 
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        mediaController.show();
-        return false;
-    }
-
-    @Override
-    public void onStop(){
-        mediaPlayer.stop();
-        mediaPlayer.release();
-        super.onStop();
     }
 
     @Override
@@ -141,8 +184,8 @@ public class DetalleFragment extends Fragment implements MediaPlayer.OnPreparedL
     }
 
     @Override
-    public void seekTo(int pos) {
-        mediaPlayer.seekTo(pos);
+    public void seekTo(int i) {
+        mediaPlayer.seekTo(i);
     }
 
     @Override
@@ -173,5 +216,18 @@ public class DetalleFragment extends Fragment implements MediaPlayer.OnPreparedL
     @Override
     public int getAudioSessionId() {
         return 0;
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        mediaController.show();
+        return false;
+    }
+
+    @Override
+    public void onStop() {
+        mediaPlayer.stop();
+        mediaPlayer.release();
+        super.onStop();
     }
 }
