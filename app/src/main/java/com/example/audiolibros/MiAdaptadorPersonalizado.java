@@ -40,14 +40,6 @@ public class MiAdaptadorPersonalizado
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-//        LayoutInflater inflater =
-//                (LayoutInflater)
-//                        contexto.getSystemService(
-//                                Context.LAYOUT_INFLATER_SERVICE);
-//
-//        View v = inflater.inflate(R.layout.item_selector_layout,
-//                null);
-
 
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_selector_layout,

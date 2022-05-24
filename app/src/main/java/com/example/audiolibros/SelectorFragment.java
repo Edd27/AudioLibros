@@ -22,20 +22,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SelectorFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SelectorFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -48,15 +39,6 @@ public class SelectorFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SelectorFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static SelectorFragment newInstance(String param1, String param2) {
         SelectorFragment fragment = new SelectorFragment();
         Bundle args = new Bundle();
@@ -88,7 +70,6 @@ public class SelectorFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
 
         setHasOptionsMenu(true);
 
@@ -98,17 +79,13 @@ public class SelectorFragment extends Fragment {
                         container,
                         false);
 
-//        TextView   txtLbl = layout.findViewById(R.id.lblSF);
-//
-//        txtLbl.setText("Fragmento Selector En ejecucion");
-
         recyclerViewLibros =
                 layout.findViewById(R.id.recyclerViewLibros);
 
         AdaptadorLibrosFiltro miAdaptadorPersonalizado =
                 new AdaptadorLibrosFiltro(getActivity() ,
                         Libro.ejemplosLibros()
-                )        ;
+                );
 
         miAdaptadorPersonalizado.setOnClickLister(view ->
                 {
@@ -119,7 +96,7 @@ public class SelectorFragment extends Fragment {
                             "ELement at " + pos,
                             Toast.LENGTH_LONG).show();
 
-                    ((MainActivity)this.contexto).mostrarDetalle(recyclerViewLibros.getChildAdapterPosition(view));
+                    ((MainActivity)this.contexto).mostrarDetalle(pos, false);
                 }
         );
 
@@ -158,20 +135,12 @@ public class SelectorFragment extends Fragment {
 
                                                             break;
                                                         case 1:
-                                                            int pos = recyclerViewLibros.getChildLayoutPosition(view);
-                                                            miAdaptadorPersonalizado.insertar(miAdaptadorPersonalizado.getItem(pos));
-                                                            miAdaptadorPersonalizado
-                                                                    .notifyDataSetChanged();
-                                                            Snackbar.make(view, "Libro insertado", Snackbar.LENGTH_INDEFINITE)
-                                                                    .setAction("OK", view -> {}).show();
+                                                            Libro.ejemplosLibros().add(Libro.ejemplosLibros().get(posLibro));
+                                                            miAdaptadorPersonalizado.notifyItemInserted(Libro.ejemplosLibros().size() - 1);
                                                             break;
-
                                                         case 2:
-                                                            Snackbar.make(view, "¿Estás seguro?", Snackbar.LENGTH_LONG)
-                                                                    .setAction("SI", view1 -> {
-                                                                        miAdaptadorPersonalizado.borrar(i);
-                                                                        miAdaptadorPersonalizado.notifyDataSetChanged();
-                                                                    }).show();
+                                                            Libro.ejemplosLibros().remove(posLibro);
+                                                            miAdaptadorPersonalizado.notifyItemRemoved(posLibro);
                                                             break;
                                                     }
 

@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
         app = new com.example.audiolibros.Aplicacion();
 
 
-
         if (findViewById(R.id.contenedor_pequeno) != null &&
                 getSupportFragmentManager()
                         .findFragmentById(R.id.contenedor_pequeno) == null
@@ -48,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void mostrarDetalle(int pos) {
+    public void mostrarDetalle(int pos, boolean service) {
         DetalleFragment detalleFragment =
                 (DetalleFragment) getSupportFragmentManager().
                         findFragmentById(R.id.detalle_fragment);
@@ -56,17 +55,14 @@ public class MainActivity extends AppCompatActivity {
             detalleFragment.setInfoLibro(pos);
         } else {
 
-            detalleFragment =
-                    new DetalleFragment();
+            detalleFragment = new DetalleFragment();
             Bundle bundle = new Bundle();
 
-            bundle.putInt(DetalleFragment.ARG_INDEX_LIBRO,
-                    pos
-            );
+            bundle.putBoolean(DetalleFragment.ARG_SERVICE, service);
 
-            detalleFragment.setArguments(
-                    bundle
-            );
+            bundle.putInt(DetalleFragment.ARG_INDEX_LIBRO, pos);
+
+            detalleFragment.setArguments(bundle);
 
             getSupportFragmentManager().beginTransaction().
                     setReorderingAllowed(true)
@@ -87,24 +83,25 @@ public class MainActivity extends AppCompatActivity {
                 "course.android.audiolibros_v1_internal", MODE_PRIVATE);
         int id = pref.getInt("ultimo", -1);
         if (id >= 0) {
-            mostrarDetalle(id);
+            mostrarDetalle(id, false);
         } else {
-            Toast.makeText(this,"Sin última vista",Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Sin última vista", Toast.LENGTH_LONG).show();
         }
     }
 
-    @Override public boolean onCreateOptionsMenu(Menu menu){
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
-    @Override public boolean onOptionsItemSelected(MenuItem item){
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.menu_preferencias){
+        if (id == R.id.menu_preferencias) {
             Toast.makeText(this, "Preferencias", Toast.LENGTH_SHORT).show();
             return true;
-        }
-        else if (id == R.id.menu_acerca) {
+        } else if (id == R.id.menu_acerca) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Mensaje de Acerca De");
             builder.setPositiveButton(android.R.string.ok, null);
